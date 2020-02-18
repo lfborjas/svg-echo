@@ -60,7 +60,7 @@ update msg model =
         Tapped pos ->
             case model.drawingState of
                 Done ->
-                    ( { model | start = Just pos, drawingState = Drawing }, Cmd.none )
+                    ( { model | start = Just pos, drawingState = Drawing, end = Nothing }, Cmd.none )
 
                 Drawing ->
                     ( { model | end = Just pos, drawingState = Done }, Cmd.none )
