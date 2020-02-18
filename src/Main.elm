@@ -2,6 +2,7 @@ module Main exposing (DrawingState(..), Model, Msg(..), init, main, subscription
 
 import Browser
 import Html exposing (..)
+import Html.Attributes
 import Html.Events exposing (on)
 import Json.Decode as Json exposing (Decoder, field, int, map2)
 import Svg exposing (..)
@@ -76,7 +77,7 @@ view : Model -> Document Msg
 view model =
     { title = "SVG Echo"
     , body =
-        [ div [ onClickLocation model ]
+        [ div [ Html.Attributes.id "container", onClickLocation model ]
             [ svg []
                 [ drawStart model
                 , drawEnd model
@@ -93,7 +94,7 @@ drawStart { start } =
             g [] []
 
         Just pos ->
-            circle [ cx (String.fromInt pos.x), cy (String.fromInt pos.y), fill "red", r "20" ] []
+            drawCircle "red" pos
 
 
 drawEnd : Model -> Svg Msg
@@ -103,7 +104,12 @@ drawEnd { end } =
             g [] []
 
         Just pos ->
-            circle [ cx (String.fromInt pos.x), cy (String.fromInt pos.y), fill "blue", r "20" ] []
+            drawCircle "blue" pos
+
+
+drawCircle : String -> Position -> Svg Msg
+drawCircle fillColor pos =
+    circle [ cx (String.fromInt pos.x), cy (String.fromInt pos.y), fill fillColor, r "20" ] []
 
 
 onClickLocation : Model -> Html.Attribute Msg
