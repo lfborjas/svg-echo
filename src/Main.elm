@@ -2,9 +2,10 @@ module Main exposing (DrawingState(..), Model, Msg(..), init, main, subscription
 
 import Browser
 import Html exposing (..)
+import Html.Events exposing (on)
+import Json.Decode as Json exposing (Decoder, field, int, map2)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Events exposing (..)
 
 
 main =
@@ -21,25 +22,27 @@ type DrawingState
     | Drawing
 
 
+type alias Position =
+    { x : Int
+    , y : Int
+    }
+
+
 type Msg
-    = Tapped
+    = Tapped Position
 
 
 type alias Model =
-    { startX : Maybe Int
-    , startY : Maybe Int
-    , endX : Maybe Int
-    , endY : Maybe Int
+    { start : Maybe Position
+    , end : Maybe Position
     , drawingState : DrawingState
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { startX = Just 0
-      , startY = Just 0
-      , endX = Just 0
-      , endY = Just 0
+    ( { start = Just <| Position 0 0
+      , end = Just <| Position 0 0
       , drawingState = Done
       }
     , Cmd.none
@@ -53,7 +56,10 @@ subscriptions _ =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    Debug.todo "TODO"
+    case msg of
+        Tapped pos ->
+            Debug.log (Debug.toString pos) <|
+                ( { model | start = Just pos }, Cmd.none )
 
 
 type alias Document msg =
@@ -66,9 +72,21 @@ view : Model -> Document Msg
 view model =
     { title = "SVG Echo"
     , body =
-        [ div []
+        [ div [ onClickLocation model ]
             [ svg []
                 [ circle [ cx "200", cy "200", fill "red", r "20" ] [] ]
             ]
         ]
     }
+
+
+onClickLocation : Model -> Html.Attribute Msg
+onClickLocation model =
+    on "click" <| Json.map Tapped <| positionDecoder
+
+
+positionDecoder : Decoder Position
+positionDecoder =
+    map2 Position
+        (field "pageX" int)
+        (field "pageY" int)
