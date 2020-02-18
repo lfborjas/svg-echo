@@ -94,7 +94,7 @@ drawStart { start } =
             g [] []
 
         Just pos ->
-            drawCircle "red" pos
+            drawMarker "Start: " "red" pos
 
 
 drawEnd : Model -> Svg Msg
@@ -104,12 +104,33 @@ drawEnd { end } =
             g [] []
 
         Just pos ->
-            drawCircle "blue" pos
+            drawMarker "End: " "blue" pos
 
 
-drawCircle : String -> Position -> Svg Msg
-drawCircle fillColor pos =
-    circle [ cx (String.fromInt pos.x), cy (String.fromInt pos.y), fill fillColor, r "20" ] []
+drawMarker : String -> String -> Position -> Svg Msg
+drawMarker label fillColor pos =
+    let
+        px =
+            String.fromInt <| pos.x
+
+        py =
+            String.fromInt <| pos.y
+
+        offsetX =
+            String.fromInt <| pos.x - 40
+
+        offsetY =
+            String.fromInt <| pos.y + 30
+    in
+    g []
+        [ circle [ cx px, cy py, fill fillColor, r "20" ] []
+        , text_ [ x px, y offsetY, Svg.Attributes.style ("font: sans-serif; fill: " ++ fillColor ++ ";") ]
+            [ Svg.text <| label ++ px ++ ", " ++ py ]
+        ]
+
+
+
+-- from: https://stackoverflow.com/questions/40269494/elm-adding-click-events-to-svg-elements-doesnt-work-is-this-possible
 
 
 onClickLocation : Model -> Html.Attribute Msg
