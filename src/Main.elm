@@ -94,7 +94,7 @@ drawStart { start } =
             g [] []
 
         Just pos ->
-            drawMarker "Start: " "red" pos
+            drawMarker "A: " "red" pos
 
 
 drawEnd : Model -> Svg Msg
@@ -104,7 +104,7 @@ drawEnd { end } =
             g [] []
 
         Just pos ->
-            drawMarker "End: " "blue" pos
+            drawMarker "B: " "blue" pos
 
 
 drawMarker : String -> String -> Position -> Svg Msg
@@ -117,15 +117,15 @@ drawMarker label fillColor pos =
             String.fromInt <| pos.y
 
         offsetX =
-            String.fromInt <| pos.x - 40
+            String.fromInt <| pos.x - 60
 
         offsetY =
-            String.fromInt <| pos.y + 30
+            String.fromInt <| pos.y + 60
     in
     g []
         [ circle [ cx px, cy py, fill fillColor, r "20" ] []
-        , text_ [ x px, y offsetY, Svg.Attributes.style ("font: sans-serif; fill: " ++ fillColor ++ ";") ]
-            [ Svg.text <| label ++ px ++ ", " ++ py ]
+        , text_ [ x offsetX, y offsetY, Svg.Attributes.style ("font: italic 60px sans-serif; fill: " ++ fillColor ++ ";") ]
+            [ Svg.text <| label ++ "(" ++ px ++ "," ++ py ++ ")" ]
         ]
 
 

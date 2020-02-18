@@ -4904,8 +4904,8 @@ var author$project$Main$drawMarker = F3(
 	function (label, fillColor, pos) {
 		var py = elm$core$String$fromInt(pos.N);
 		var px = elm$core$String$fromInt(pos.M);
-		var offsetY = elm$core$String$fromInt(pos.N + 30);
-		var offsetX = elm$core$String$fromInt(pos.M - 40);
+		var offsetY = elm$core$String$fromInt(pos.N + 60);
+		var offsetX = elm$core$String$fromInt(pos.M - 60);
 		return A2(
 			elm$svg$Svg$g,
 			_List_Nil,
@@ -4925,13 +4925,13 @@ var author$project$Main$drawMarker = F3(
 					elm$svg$Svg$text_,
 					_List_fromArray(
 						[
-							elm$svg$Svg$Attributes$x(px),
+							elm$svg$Svg$Attributes$x(offsetX),
 							elm$svg$Svg$Attributes$y(offsetY),
-							elm$svg$Svg$Attributes$style('font: sans-serif; fill: ' + (fillColor + ';'))
+							elm$svg$Svg$Attributes$style('font: italic 60px sans-serif; fill: ' + (fillColor + ';'))
 						]),
 					_List_fromArray(
 						[
-							elm$svg$Svg$text(label + (px + (', ' + py)))
+							elm$svg$Svg$text(label + ('(' + (px + (',' + (py + ')')))))
 						]))
 				]));
 	});
@@ -4941,7 +4941,7 @@ var author$project$Main$drawEnd = function (_n0) {
 		return A2(elm$svg$Svg$g, _List_Nil, _List_Nil);
 	} else {
 		var pos = end.a;
-		return A3(author$project$Main$drawMarker, 'End: ', 'blue', pos);
+		return A3(author$project$Main$drawMarker, 'B: ', 'blue', pos);
 	}
 };
 var author$project$Main$drawStart = function (_n0) {
@@ -4950,7 +4950,7 @@ var author$project$Main$drawStart = function (_n0) {
 		return A2(elm$svg$Svg$g, _List_Nil, _List_Nil);
 	} else {
 		var pos = start.a;
-		return A3(author$project$Main$drawMarker, 'Start: ', 'red', pos);
+		return A3(author$project$Main$drawMarker, 'A: ', 'red', pos);
 	}
 };
 var author$project$Main$Tapped = elm$core$Basics$identity;
