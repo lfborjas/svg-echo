@@ -41,8 +41,8 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { start = Just <| Position 0 0
-      , end = Just <| Position 0 0
+    ( { start = Nothing
+      , end = Nothing
       , drawingState = Done
       }
     , Cmd.none
@@ -58,8 +58,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tapped pos ->
-            Debug.log (Debug.toString pos) <|
-                ( { model | start = Just pos }, Cmd.none )
+            case model.drawingState of
+                Done ->
+                    ( { model | start = Just pos, drawingState = Drawing }, Cmd.none )
+
+                Drawing ->
+                    ( { model | end = Just pos, drawingState = Done }, Cmd.none )
 
 
 type alias Document msg =
@@ -74,10 +78,32 @@ view model =
     , body =
         [ div [ onClickLocation model ]
             [ svg []
-                [ circle [ cx "200", cy "200", fill "red", r "20" ] [] ]
+                [ drawStart model
+                , drawEnd model
+                ]
             ]
         ]
     }
+
+
+drawStart : Model -> Svg Msg
+drawStart { start } =
+    case start of
+        Nothing ->
+            g [] []
+
+        Just pos ->
+            circle [ cx (String.fromInt pos.x), cy (String.fromInt pos.y), fill "red", r "20" ] []
+
+
+drawEnd : Model -> Svg Msg
+drawEnd { end } =
+    case end of
+        Nothing ->
+            g [] []
+
+        Just pos ->
+            circle [ cx (String.fromInt pos.x), cy (String.fromInt pos.y), fill "blue", r "20" ] []
 
 
 onClickLocation : Model -> Html.Attribute Msg
